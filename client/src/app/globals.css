@@ -1,0 +1,156 @@
+@import url("https://fonts.googleapis.com/css2?family=Fredoka+One&family=Gantari:wght@400;500;600;700;800&display=swap");
+
+:root {
+  --purple-dark: #33142f;
+  --purple-light: #4a2045;
+  --orange: #d76a05;
+  --cream: #f2e9e9;
+  --white: #ffffff;
+  --gray: #888888;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--purple-dark);
+  color: var(--white);
+  font-family: "Gantari", sans-serif;
+}
+
+.font-grandstander {
+  font-family: "Grandstander", cursive;
+}
+
+.font-fredoka {
+  font-family: "Fredoka One", cursive;
+}
+
+/* Spinning vinyl animation */
+/* Spinning vinyl animation */
+@keyframes spin-slow {
+  from {
+    transform: translate(-50%, -35%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -35%) rotate(360deg);
+  }
+}
+
+.spin-slow {
+  animation: spin-slow 4s linear infinite;
+}
+
+/* Custom Bootstrap overrides */
+.bg-purple-dark {
+  background-color: var(--purple-dark) !important;
+}
+
+.bg-purple-light {
+  background-color: var(--purple-light) !important;
+}
+
+.text-orange {
+  color: var(--orange) !important;
+}
+
+.text-cream {
+  color: var(--cream) !important;
+}
+
+.btn-orange {
+  background-color: var(--orange);
+  border-color: var(--orange);
+  color: var(--white);
+}
+
+.btn-orange:hover {
+  background-color: #c45f04;
+  border-color: #c45f04;
+  color: var(--white);
+}
+
+.groove-card {
+  background-color: var(--purple-light);
+  border-radius: 12px;
+  border: none;
+}
+
+.review-card {
+  background-color: var(--purple-light);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.album-card {
+  transition: transform 0.2s ease;
+}
+
+.album-card:hover {
+  transform: scale(1.03);
+}
+
+.search-bar {
+  background-color: var(--cream);
+  border: none;
+  border-radius: 25px;
+  padding: 12px 20px;
+  color: var(--purple-dark);
+}
+
+.search-bar::placeholder {
+  color: var(--gray);
+}
+
+.search-bar:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(215, 106, 5, 0.3);
+}
+
+/* Test vinyl using pure CSS */
+.css-vinyl {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    #d76a05 0%,
+    #d76a05 15%,
+    #1a1a1a 15%,
+    #1a1a1a 100%
+  );
+  box-shadow: inset 0 0 0 3px #333;
+}
+
+h1 {
+  font-size: 36px;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+h3 {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+h4 {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+h5 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+h6 {
+  font-size: 16px;
+  font-weight: 700;
+}
