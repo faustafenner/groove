@@ -17,11 +17,13 @@ const axiosWithCredentials = axios.create({ withCredentials: true });
 // Available avatar options
 const AVATAR_OPTIONS = [
   "/avatars/beyonce.png",
-  "/avatars/avatar2.png",
-  "/avatars/avatar3.png",
-  "/avatars/avatar4.png",
-  "/avatars/avatar5.png",
-  "/avatars/avatar6.png",
+  "/avatars/mad.png",
+  "/avatars/ari.png",
+  "/avatars/bad.png",
+  "/avatars/dance.png",
+  "/avatars/prof.png",
+  "/avatars/poot.png",
+  "/avatars/cardi.png",
 ];
 
 export default function EditProfilePage() {
