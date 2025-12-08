@@ -78,9 +78,36 @@ export default function ReviewRoutes(app) {
     res.sendStatus(200);
   };
 
+  const updateReview = async (req, res) => {
+    const { reviewId } = req.params;
+    const currentUser = req.session["currentUser"];
+
+    if (!currentUser) {
+      res.status(401).json({ message: "Not authenticated" });
+      return;
+    }
+
+    const review = await dao.findReviewById(reviewId);
+    if (!review) {
+      res.status(404).json({ message: "Review not found" });
+      return;
+    }
+
+    if (review.user._id !== currentUser._id) {
+      res.status(403).json({ message: "Not authorized" });
+      return;
+    }
+
+    const { rating, content } = req.body;
+    await dao.updateReview(reviewId, { rating, content });
+    const updatedReview = await dao.findReviewById(reviewId);
+    res.json(updatedReview);
+  };
+
   app.get("/api/reviews/recent", findRecentReviews);
   app.get("/api/reviews/album/:spotifyAlbumId", findReviewsByAlbum);
   app.get("/api/reviews/user/:userId", findReviewsByUser);
   app.post("/api/reviews", createReview);
+  app.put("/api/reviews/:reviewId", updateReview);
   app.delete("/api/reviews/:reviewId", deleteReview);
 }

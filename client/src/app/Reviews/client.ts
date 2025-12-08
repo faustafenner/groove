@@ -33,7 +33,45 @@ export const createReview = async (review: {
   return response.data;
 };
 
+export const updateReview = async (
+  reviewId: string,
+  updates: { rating: number; content: string }
+) => {
+  const response = await axiosWithCredentials.put(
+    `${REVIEWS_API}/${reviewId}`,
+    updates
+  );
+  return response.data;
+};
+
 export const deleteReview = async (reviewId: string) => {
   const response = await axiosWithCredentials.delete(`${REVIEWS_API}/${reviewId}`);
   return response.data;
+};
+
+// Like functionality
+export const getLikeCount = async (reviewId: string) => {
+  const response = await axios.get(`${REVIEWS_API}/${reviewId}/likes/count`);
+  return response.data.count;
+};
+
+export const checkIfLiked = async (reviewId: string) => {
+  const response = await axiosWithCredentials.get(
+    `${REVIEWS_API}/${reviewId}/likes/check`
+  );
+  return response.data.liked;
+};
+
+export const likeReview = async (reviewId: string) => {
+  const response = await axiosWithCredentials.post(
+    `${REVIEWS_API}/${reviewId}/likes`
+  );
+  return response.data.count;
+};
+
+export const unlikeReview = async (reviewId: string) => {
+  const response = await axiosWithCredentials.delete(
+    `${REVIEWS_API}/${reviewId}/likes`
+  );
+  return response.data.count;
 };

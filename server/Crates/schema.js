@@ -17,7 +17,6 @@ const crateSchema = new mongoose.Schema(
     user: { type: String, ref: "UserModel", required: true },
     title: { type: String, required: true, maxLength: 100 },
     description: { type: String, maxLength: 500, default: "" },
-    isPublic: { type: Boolean, default: true },
     albums: [crateAlbumSchema],
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },

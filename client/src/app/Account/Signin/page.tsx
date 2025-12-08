@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
@@ -71,7 +72,7 @@ export default function SigninPage() {
 
           <button
             type="submit"
-            className="btn btn-orange w-100 mb-3"
+            className="btn btn-cream w-100 mb-3"
             disabled={loading}
           >
             {loading ? "Signing in..." : "Sign In"}

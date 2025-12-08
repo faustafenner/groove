@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import axios from "axios";
-import { FaCrown } from "react-icons/fa";
+import { FaCrown, FaHeart } from "react-icons/fa";
+import * as crateClient from "./client";
 
 const HTTP_SERVER = process.env.NEXT_PUBLIC_HTTP_SERVER;
 
@@ -13,6 +14,7 @@ export default function CratesDiscoveryPage() {
   const [recentCrates, setRecentCrates] = useState<any[]>([]);
   const [topCrates, setTopCrates] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [crateLikes, setCrateLikes] = useState<Record<string, number>>({});
 
   useEffect(() => {
     const fetchCrates = async () => {
@@ -23,7 +25,27 @@ export default function CratesDiscoveryPage() {
         ]);
 
         setRecentCrates(recentRes.data);
-        setTopCrates(publicRes.data.slice(0, 12));
+
+        // Fetch like counts for all crates
+        const allCrates = publicRes.data;
+        const likeCounts: Record<string, number> = {};
+        await Promise.all(
+          allCrates.map(async (crate: any) => {
+            try {
+              const count = await crateClient.getCrateLikeCount(crate._id);
+              likeCounts[crate._id] = count;
+            } catch (err) {
+              likeCounts[crate._id] = 0;
+            }
+          })
+        );
+        setCrateLikes(likeCounts);
+
+        // Sort by likes and take top 12
+        const sorted = [...allCrates].sort((a, b) => {
+          return (likeCounts[b._id] || 0) - (likeCounts[a._id] || 0);
+        });
+        setTopCrates(sorted.slice(0, 12));
       } catch (err) {
         console.error(err);
       } finally {
@@ -47,6 +69,7 @@ export default function CratesDiscoveryPage() {
   const CrateCard = ({ crate }: { crate: any }) => {
     const isProUser =
       crate.user && (crate.user.role === "PRO" || crate.user.role === "ADMIN");
+    const likeCount = crateLikes[crate._id] || 0;
 
     return (
       <div>
@@ -124,6 +147,19 @@ export default function CratesDiscoveryPage() {
               {crate.user.username}
             </span>
           </Link>
+        )}
+
+        {/* Like count */}
+        {likeCount > 0 && (
+          <div className="d-flex align-items-center justify-content-center gap-1 mt-1">
+            <FaHeart size={12} style={{ color: "#d76a05" }} />
+            <span
+              className="text-cream"
+              style={{ fontSize: "0.7rem", opacity: 0.7 }}
+            >
+              {likeCount}
+            </span>
+          </div>
         )}
       </div>
     );

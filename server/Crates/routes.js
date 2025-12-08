@@ -44,24 +44,17 @@ export default function CrateRoutes(app) {
       return;
     }
 
-    const currentUser = req.session["currentUser"];
-    if (!crate.isPublic && (!currentUser || crate.user._id !== currentUser._id)) {
-      res.status(403).json({ message: "This crate is private" });
-      return;
-    }
-
     res.json(crate);
   };
 
   const createCrate = async (req, res) => {
     const currentUser = req.session["currentUser"];
-    const { title, description, isPublic } = req.body;
+    const { title, description } = req.body;
 
     const newCrate = await dao.createCrate({
       user: currentUser._id,
       title,
       description,
-      isPublic: isPublic !== false,
     });
 
     const populatedCrate = await dao.findCrateById(newCrate._id);
@@ -83,8 +76,8 @@ export default function CrateRoutes(app) {
       return;
     }
 
-    const { title, description, isPublic } = req.body;
-    await dao.updateCrate(crateId, { title, description, isPublic });
+    const { title, description } = req.body;
+    await dao.updateCrate(crateId, { title, description });
     const updatedCrate = await dao.findCrateById(crateId);
     res.json(updatedCrate);
   };

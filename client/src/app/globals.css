@@ -45,6 +45,12 @@ body {
 }
 
 /* Custom Bootstrap overrides */
+input::placeholder,
+textarea::placeholder {
+  color: var(--gray) !important;
+  opacity: 0.7;
+}
+
 .bg-purple-dark {
   background-color: var(--purple-dark) !important;
 }
@@ -71,6 +77,18 @@ body {
   background-color: #c45f04;
   border-color: #c45f04;
   color: var(--white);
+}
+
+.btn-cream {
+  background-color: var(--cream) !important;
+  border-color: var(--cream) !important;
+  color: var(--purple-dark) !important;
+}
+
+.btn-cream:hover {
+  background-color: #e6d4b8 !important;
+  border-color: #e6d4b8 !important;
+  color: var(--purple-dark) !important;
 }
 
 .groove-card {

@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import Image from "next/image";
 import StarRating from "@/components/StarRating";
+import ReviewCard from "@/components/ReviewCard";
 import Link from "next/link";
 import axios from "axios";
 import { FaPlus, FaTimes, FaCheck } from "react-icons/fa";
@@ -42,7 +43,6 @@ export default function AlbumDetailPage() {
   const [showNewCrateForm, setShowNewCrateForm] = useState(false);
   const [newCrateTitle, setNewCrateTitle] = useState("");
   const [newCrateDescription, setNewCrateDescription] = useState("");
-  const [newCratePublic, setNewCratePublic] = useState(true);
   const [creatingCrate, setCreatingCrate] = useState(false);
 
   useEffect(() => {
@@ -177,7 +177,6 @@ export default function AlbumDetailPage() {
         {
           title: newCrateTitle,
           description: newCrateDescription,
-          isPublic: newCratePublic,
         }
       );
 
@@ -199,7 +198,6 @@ export default function AlbumDetailPage() {
       setShowNewCrateForm(false);
       setNewCrateTitle("");
       setNewCrateDescription("");
-      setNewCratePublic(true);
     } catch (err: any) {
       alert(err.response?.data?.message || "Failed to create crate");
     }
@@ -361,44 +359,12 @@ export default function AlbumDetailPage() {
         {reviews.length > 0 ? (
           <div className="d-flex flex-column gap-3">
             {reviews.map((review) => (
-              <div key={review._id} className="review-card">
-                <div className="d-flex align-items-center gap-2 mb-2">
-                  <div
-                    style={{
-                      width: 32,
-                      height: 32,
-                      borderRadius: "50%",
-                      backgroundColor: "#D76A05",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "white",
-                      fontWeight: "bold",
-                      overflow: "hidden",
-                    }}
-                  >
-                    {review.user.avatar ? (
-                      <Image
-                        src={review.user.avatar}
-                        alt={review.user.username}
-                        width={32}
-                        height={32}
-                        style={{ objectFit: "cover" }}
-                      />
-                    ) : (
-                      review.user.username[0].toUpperCase()
-                    )}
-                  </div>
-                  <Link
-                    href={`/Profile/${review.user._id}`}
-                    className="text-white text-decoration-none"
-                  >
-                    {review.user.username}
-                  </Link>
-                </div>
-                <StarRating rating={review.rating} readonly size="sm" />
-                <p className="mt-2 mb-0 text-cream">{review.content}</p>
-              </div>
+              <ReviewCard
+                key={review._id}
+                review={review}
+                showAlbum={false}
+                onDelete={refreshReviews}
+              />
             ))}
           </div>
         ) : (
@@ -534,22 +500,6 @@ export default function AlbumDetailPage() {
                     onChange={(e) => setNewCrateDescription(e.target.value)}
                     placeholder="What's this crate about?"
                   />
-                </div>
-
-                <div className="form-check mb-4">
-                  <input
-                    type="checkbox"
-                    className="form-check-input"
-                    id="newCratePublic"
-                    checked={newCratePublic}
-                    onChange={(e) => setNewCratePublic(e.target.checked)}
-                  />
-                  <label
-                    className="form-check-label text-cream"
-                    htmlFor="newCratePublic"
-                  >
-                    Make this crate public
-                  </label>
                 </div>
 
                 <div className="d-flex gap-2">

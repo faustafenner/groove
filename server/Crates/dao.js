@@ -4,7 +4,7 @@ import model from "./model.js";
 export default function CratesDao() {
   const findAllPublicCrates = () => {
     return model
-      .find({ isPublic: true })
+      .find()
       .populate("user", "-password")
       .sort({ createdAt: -1 });
   };
@@ -14,15 +14,12 @@ export default function CratesDao() {
   };
 
   const findCratesByUser = (userId, includePrivate = false) => {
-    const query = includePrivate
-      ? { user: userId }
-      : { user: userId, isPublic: true };
-    return model.find(query).populate("user", "-password").sort({ createdAt: -1 });
+    return model.find({ user: userId }).populate("user", "-password").sort({ createdAt: -1 });
   };
 
   const findRecentCrates = (limit = 10) => {
     return model
-      .find({ isPublic: true })
+      .find()
       .populate("user", "-password")
       .sort({ createdAt: -1 })
       .limit(limit);

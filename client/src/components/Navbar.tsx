@@ -94,9 +94,17 @@ export default function Navbar() {
               width: 36,
               height: 36,
               borderRadius: "50%",
-              backgroundColor: "#888",
+              overflow: "hidden",
             }}
-          />
+          >
+            <Image
+              src="/noProfileImage.png"
+              alt="Guest"
+              width={36}
+              height={36}
+              style={{ objectFit: "cover" }}
+            />
+          </div>
         </Link>
       )}
 

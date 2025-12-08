@@ -20,10 +20,40 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [userReviewsLoading, setUserReviewsLoading] = useState(false);
 
+  const fetchRecentReviews = async () => {
+    try {
+      const response = await axios.get(`${HTTP_SERVER}/api/reviews/recent`);
+      setRecentReviews(response.data);
+      setLoading(false);
+    } catch (err) {
+      console.error(err);
+      setLoading(false);
+    }
+  };
+
+  const fetchUserReviews = async () => {
+    if (!currentUser) {
+      setUserReviews([]);
+      return;
+    }
+
+    setUserReviewsLoading(true);
+    try {
+      const response = await axios.get(
+        `${HTTP_SERVER}/api/reviews/user/${currentUser._id}`
+      );
+      setUserReviews(response.data);
+      setUserReviewsLoading(false);
+    } catch (err) {
+      console.error(err);
+      setUserReviewsLoading(false);
+    }
+  };
+
   useEffect(() => {
     let isMounted = true;
 
-    const fetchRecentReviews = async () => {
+    const loadRecentReviews = async () => {
       try {
         const response = await axios.get(`${HTTP_SERVER}/api/reviews/recent`);
         if (isMounted) {
@@ -38,7 +68,7 @@ export default function HomePage() {
       }
     };
 
-    fetchRecentReviews();
+    loadRecentReviews();
 
     return () => {
       isMounted = false;
@@ -49,7 +79,7 @@ export default function HomePage() {
   useEffect(() => {
     let isMounted = true;
 
-    const fetchUserReviews = async () => {
+    const loadUserReviews = async () => {
       if (!currentUser) {
         setUserReviews([]);
         return;
@@ -72,7 +102,7 @@ export default function HomePage() {
       }
     };
 
-    fetchUserReviews();
+    loadUserReviews();
 
     return () => {
       isMounted = false;
@@ -127,7 +157,7 @@ export default function HomePage() {
           <div className="row g-3">
             {recentReviews.slice(0, 4).map((review) => (
               <div key={review._id} className="col-6 col-md-4 col-lg-3">
-                <ReviewCard review={review} />
+                <ReviewCard review={review} onDelete={fetchRecentReviews} />
               </div>
             ))}
           </div>
@@ -157,7 +187,7 @@ export default function HomePage() {
             <div className="row g-3">
               {userReviews.slice(0, 4).map((review) => (
                 <div key={review._id} className="col-6 col-md-4 col-lg-3">
-                  <ReviewCard review={review} />
+                  <ReviewCard review={review} onDelete={fetchUserReviews} />
                 </div>
               ))}
             </div>
