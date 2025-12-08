@@ -24,6 +24,7 @@ const AVATAR_OPTIONS = [
   "/avatars/prof.png",
   "/avatars/poot.png",
   "/avatars/cardi.png",
+  "/avatars/beygrammy.png",
 ];
 
 export default function EditProfilePage() {
