@@ -15,6 +15,7 @@ export default function LikesDao() {
       _id: uuidv4(),
       user: userId,
       review: reviewId,
+      crate: null,
     });
   };
 
@@ -39,6 +40,7 @@ export default function LikesDao() {
     return model.create({
       _id: uuidv4(),
       user: userId,
+      review: null,
       crate: crateId,
     });
   };

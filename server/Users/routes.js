@@ -81,6 +81,29 @@ export default function UserRoutes(app) {
     res.json(users);
   };
 
+  const searchUsers = async (req, res) => {
+    const { query } = req.query;
+    const users = await dao.findAllUsers();
+    
+    // Filter out sensitive info and optionally search by username
+    const publicUsers = users.map(user => ({
+      _id: user._id,
+      username: user.username,
+      avatar: user.avatar,
+      bio: user.bio,
+      role: user.role,
+    }));
+    
+    if (query) {
+      const filtered = publicUsers.filter(user =>
+        user.username.toLowerCase().includes(query.toLowerCase())
+      );
+      res.json(filtered);
+    } else {
+      res.json(publicUsers);
+    }
+  };
+
   const updateUser = async (req, res) => {
     const { userId } = req.params;
     const currentUser = req.session["currentUser"];
@@ -135,8 +158,11 @@ export default function UserRoutes(app) {
   app.post("/api/users/signup", signup);
   app.post("/api/users/signout", signout);
   app.post("/api/users/profile", profile);
+  app.get("/api/users/search", searchUsers);
   app.get("/api/users/:userId", findUserById);
   app.get("/api/users", findAllUsers);
   app.put("/api/users/:userId", updateUser);
   app.delete("/api/users/:userId", deleteUser);
 }
+
+
