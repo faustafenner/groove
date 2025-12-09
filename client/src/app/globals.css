@@ -7,6 +7,7 @@
   --cream: #f2e9e9;
   --white: #ffffff;
   --gray: #888888;
+  --pink: #e36baf;
 }
 
 * {
@@ -89,6 +90,13 @@ textarea::placeholder {
   background-color: #e6d4b8 !important;
   border-color: #e6d4b8 !important;
   color: var(--purple-dark) !important;
+}
+
+.btn-cream:disabled {
+  background-color: var(--cream) !important;
+  border-color: var(--cream) !important;
+  color: var(--purple-dark) !important;
+  opacity: 0.65 !important;
 }
 
 .groove-card {

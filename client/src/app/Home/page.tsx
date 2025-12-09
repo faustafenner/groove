@@ -146,7 +146,7 @@ export default function HomePage() {
 
       {/* Recent Buzz Section */}
       <div className="text-start mt-5">
-        <h5 className="text-orange mb-3">Recent Buzz</h5>
+        <h5 className="text-orange mb-3">Recently Spinning</h5>
         {loading ? (
           <div className="text-center py-4">
             <div className="spinner-border text-warning" role="status">
@@ -210,7 +210,7 @@ export default function HomePage() {
       {!currentUser && (
         <div className="mt-5 pt-4">
           <Link href="/Account/Signup" className="text-orange">
-            Want to get in on the Buzz? Create an Account.
+            Got Opinions? Create an Account.
           </Link>
         </div>
       )}

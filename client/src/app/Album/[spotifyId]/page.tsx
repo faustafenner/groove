@@ -276,7 +276,7 @@ export default function AlbumDetailPage() {
           <div className="d-flex flex-wrap gap-2 mt-4">
             {currentUser && !userReview && !showReviewForm && (
               <button
-                className="btn btn-orange"
+                className="btn btn-cream"
                 onClick={() => setShowReviewForm(true)}
               >
                 Write a Review
@@ -337,7 +337,7 @@ export default function AlbumDetailPage() {
 
           <div className="d-flex gap-2">
             <button
-              className="btn btn-orange"
+              className="btn btn-cream"
               onClick={handleSubmitReview}
               disabled={submitting || !reviewRating || !reviewContent.trim()}
             >

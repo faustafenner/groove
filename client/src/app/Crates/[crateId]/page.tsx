@@ -8,7 +8,7 @@ import Link from "next/link";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
-import { FaCrown, FaEdit, FaTrash, FaHeart, FaRegHeart } from "react-icons/fa";
+import { FaCrown, FaEdit, FaTrash } from "react-icons/fa";
 import * as crateClient from "@/app/Crates/client";
 
 const HTTP_SERVER = process.env.NEXT_PUBLIC_HTTP_SERVER;
@@ -28,9 +28,6 @@ export default function CrateDetailsPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState("");
   const [editDescription, setEditDescription] = useState("");
-  const [likeCount, setLikeCount] = useState(0);
-  const [isLiked, setIsLiked] = useState(false);
-  const [likeLoading, setLikeLoading] = useState(false);
 
   const isProUser = user && (user.role === "PRO" || user.role === "ADMIN");
   const isOwner = currentUser && user && currentUser._id === user._id;
@@ -69,41 +66,6 @@ export default function CrateDetailsPage() {
 
     fetchData();
   }, [crateId]);
-
-  useEffect(() => {
-    const fetchLikeData = async () => {
-      try {
-        const count = await crateClient.getCrateLikeCount(crateId);
-        setLikeCount(count);
-        if (currentUser) {
-          const liked = await crateClient.checkIfCrateLiked(crateId);
-          setIsLiked(liked);
-        }
-      } catch (error) {
-        console.error("Error fetching like data:", error);
-      }
-    };
-    fetchLikeData();
-  }, [crateId, currentUser]);
-
-  const handleLike = async () => {
-    if (!currentUser || likeLoading) return;
-    setLikeLoading(true);
-    try {
-      if (isLiked) {
-        const newCount = await crateClient.unlikeCrate(crateId);
-        setLikeCount(newCount);
-        setIsLiked(false);
-      } else {
-        const newCount = await crateClient.likeCrate(crateId);
-        setLikeCount(newCount);
-        setIsLiked(true);
-      }
-    } catch (error) {
-      console.error("Error toggling like:", error);
-    }
-    setLikeLoading(false);
-  };
 
   const handleDelete = async () => {
     if (!window.confirm("Are you sure you want to delete this crate?")) return;
@@ -268,25 +230,6 @@ export default function CrateDetailsPage() {
                 {crate.description}
               </p>
             )}
-            {/* Like button */}
-            <div className="d-flex justify-content-center mt-3">
-              <button
-                onClick={handleLike}
-                disabled={!currentUser || likeLoading}
-                className="btn btn-sm d-flex align-items-center gap-2"
-                style={{
-                  background: "transparent",
-                  border: "1px solid " + (isLiked ? "#d76a05" : "#888"),
-                  color: isLiked ? "#d76a05" : "#f2e9e9",
-                  padding: "6px 12px",
-                }}
-              >
-                {isLiked ? <FaHeart size={16} /> : <FaRegHeart size={16} />}
-                <span>
-                  {likeCount} {likeCount === 1 ? "Like" : "Likes"}
-                </span>
-              </button>
-            </div>
           </>
         )}
       </div>

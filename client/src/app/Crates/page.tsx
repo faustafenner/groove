@@ -5,16 +5,14 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import axios from "axios";
-import { FaCrown, FaHeart } from "react-icons/fa";
-import * as crateClient from "./client";
+import { FaCrown } from "react-icons/fa";
 
 const HTTP_SERVER = process.env.NEXT_PUBLIC_HTTP_SERVER;
 
 export default function CratesDiscoveryPage() {
   const [recentCrates, setRecentCrates] = useState<any[]>([]);
-  const [topCrates, setTopCrates] = useState<any[]>([]);
+  const [discoverCrates, setDiscoverCrates] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [crateLikes, setCrateLikes] = useState<Record<string, number>>({});
 
   useEffect(() => {
     const fetchCrates = async () => {
@@ -26,26 +24,10 @@ export default function CratesDiscoveryPage() {
 
         setRecentCrates(recentRes.data);
 
-        // Fetch like counts for all crates
+        // Randomly shuffle and pick 8 crates for discover section
         const allCrates = publicRes.data;
-        const likeCounts: Record<string, number> = {};
-        await Promise.all(
-          allCrates.map(async (crate: any) => {
-            try {
-              const count = await crateClient.getCrateLikeCount(crate._id);
-              likeCounts[crate._id] = count;
-            } catch (err) {
-              likeCounts[crate._id] = 0;
-            }
-          })
-        );
-        setCrateLikes(likeCounts);
-
-        // Sort by likes and take top 12
-        const sorted = [...allCrates].sort((a, b) => {
-          return (likeCounts[b._id] || 0) - (likeCounts[a._id] || 0);
-        });
-        setTopCrates(sorted.slice(0, 12));
+        const shuffled = [...allCrates].sort(() => Math.random() - 0.5);
+        setDiscoverCrates(shuffled.slice(0, 8));
       } catch (err) {
         console.error(err);
       } finally {
@@ -69,7 +51,6 @@ export default function CratesDiscoveryPage() {
   const CrateCard = ({ crate }: { crate: any }) => {
     const isProUser =
       crate.user && (crate.user.role === "PRO" || crate.user.role === "ADMIN");
-    const likeCount = crateLikes[crate._id] || 0;
 
     return (
       <div>
@@ -77,8 +58,8 @@ export default function CratesDiscoveryPage() {
           <div
             style={{
               borderRadius: "8px",
-              padding: "10px",
-              aspectRatio: "1/1",
+              padding: "0px",
+              aspectRatio: "2/1",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -87,7 +68,7 @@ export default function CratesDiscoveryPage() {
           >
             <div
               style={{
-                width: "80%",
+                width: "90%",
                 aspectRatio: "1/1",
                 position: "relative",
               }}
@@ -101,8 +82,8 @@ export default function CratesDiscoveryPage() {
             </div>
           </div>
           <p
-            className="text-white text-center mt-2 mb-1"
-            style={{ fontSize: "0.9rem" }}
+            className="text-white text-center mt-0 mb-1"
+            style={{ fontSize: "1.5rem" }}
           >
             {crate.title}
           </p>
@@ -116,8 +97,8 @@ export default function CratesDiscoveryPage() {
           >
             <div
               style={{
-                width: 20,
-                height: 20,
+                width: 30,
+                height: 30,
                 borderRadius: "50%",
                 overflow: "hidden",
               }}
@@ -126,8 +107,8 @@ export default function CratesDiscoveryPage() {
                 <Image
                   src={crate.user.avatar}
                   alt={crate.user.username}
-                  width={20}
-                  height={20}
+                  width={30}
+                  height={30}
                   style={{ objectFit: "cover" }}
                 />
               ) : (
@@ -148,19 +129,6 @@ export default function CratesDiscoveryPage() {
             </span>
           </Link>
         )}
-
-        {/* Like count */}
-        {likeCount > 0 && (
-          <div className="d-flex align-items-center justify-content-center gap-1 mt-1">
-            <FaHeart size={12} style={{ color: "#d76a05" }} />
-            <span
-              className="text-cream"
-              style={{ fontSize: "0.7rem", opacity: 0.7 }}
-            >
-              {likeCount}
-            </span>
-          </div>
-        )}
       </div>
     );
   };
@@ -173,7 +141,10 @@ export default function CratesDiscoveryPage() {
       }}
     >
       {/* Page Title */}
-      <h2 className="text-white mb-4">Crates</h2>
+      <h2 className="text-cream mb-1 text-center">Crates</h2>
+      <h5 className="text-cream text-center" style={{ opacity: 0.5 }}>
+        for the collectors out there
+      </h5>
 
       {/* Recently Created */}
       <div className="mb-5">
@@ -193,12 +164,12 @@ export default function CratesDiscoveryPage() {
         )}
       </div>
 
-      {/* Top Crates */}
+      {/* Discover new collections */}
       <div>
-        <h5 className="text-orange mb-3">Top Crates</h5>
-        {topCrates.length > 0 ? (
+        <h5 className="text-orange mb-3">Discover New Music</h5>
+        {discoverCrates.length > 0 ? (
           <div className="row g-3">
-            {topCrates.slice(0, 8).map((crate) => (
+            {discoverCrates.map((crate) => (
               <div key={crate._id} className="col-3">
                 <CrateCard crate={crate} />
               </div>

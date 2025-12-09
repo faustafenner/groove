@@ -236,7 +236,7 @@ export default function ReviewCard({
               style={{
                 background: "transparent",
                 border: "none",
-                color: isLiked ? "#d76a05" : "#888",
+                color: isLiked ? "var(--pink)" : "#888",
                 padding: "0",
               }}
             >

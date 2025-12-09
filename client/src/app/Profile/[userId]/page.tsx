@@ -119,9 +119,7 @@ export default function PublicProfilePage() {
       style={{
         backgroundImage: "url(/frequency2.png)",
         backgroundSize: "100% auto",
-        backgroundRepeat: "no-repeat",
         backgroundPosition: "top center",
-        minHeight: "100vh",
       }}
     >
       {/* Profile Header */}
@@ -137,7 +135,7 @@ export default function PublicProfilePage() {
             borderRadius: "50%",
             overflow: "hidden",
             backgroundColor: "#4a2045",
-            flexShrink: 0,
+            // flexShrink: 0,
           }}
         >
           {user.avatar ? (
@@ -173,7 +171,7 @@ export default function PublicProfilePage() {
               <FaCrown
                 size={36}
                 style={{
-                  color: "#D76A05",
+                  color: "#f5d245",
                   transform: "rotate(-15deg)",
                 }}
               />
@@ -183,7 +181,22 @@ export default function PublicProfilePage() {
 
           {/* Stats */}
           <h3 className="text-cream mb-2">
-            {reviews.length} reviews | {followCounts.followers} followers
+            {/* {reviews.length} reviews |{" "} */}
+            <Link
+              href={`/Profile/${userId}/followers`}
+              className="text-cream text-decoration-none"
+              style={{ cursor: "pointer" }}
+            >
+              {followCounts.followers} followers
+            </Link>{" "}
+            |{" "}
+            <Link
+              href={`/Profile/${userId}/following`}
+              className="text-cream text-decoration-none"
+              style={{ cursor: "pointer" }}
+            >
+              {followCounts.following} following
+            </Link>
           </h3>
 
           {/* Bio */}
@@ -201,11 +214,11 @@ export default function PublicProfilePage() {
           {currentUser && !isOwnProfile && (
             <button
               className={`btn ${
-                isFollowing ? "btn-outline-light" : "btn-orange"
+                isFollowing ? "btn-outline-light" : "btn-outline-light"
               } mt-2`}
               onClick={handleFollow}
             >
-              {isFollowing ? "Following" : "Follow"}
+              {isFollowing ? "Unfollow" : "Follow"}
             </button>
           )}
 
@@ -223,14 +236,14 @@ export default function PublicProfilePage() {
       <div className="mb-5" style={{ marginTop: "60px" }}>
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h5 className="text-orange mb-0">{user.username}&apos;s recents</h5>
-          {reviews.length > 4 && (
+          {
             <Link
               href={`/Profile/${userId}/reviews`}
               className="text-white text-decoration-none"
             >
               see all
             </Link>
-          )}
+          }
         </div>
 
         {reviews.length > 0 ? (
@@ -243,7 +256,7 @@ export default function PublicProfilePage() {
           </div>
         ) : (
           <div className="groove-card p-4 text-center">
-            <p className="text-cream mb-0">No reviews yet</p>
+            <p className="text-cream mb-0">no reviews yet...</p>
           </div>
         )}
       </div>
@@ -278,7 +291,7 @@ export default function PublicProfilePage() {
                           aspectRatio: "1/1",
                           borderRadius: "8px",
                           overflow: "hidden",
-                          marginBottom: "12px",
+                          marginBottom: "10px",
                           position: "relative",
                           width: "100%",
                         }}
@@ -298,7 +311,7 @@ export default function PublicProfilePage() {
             </div>
           ) : (
             <div className="groove-card p-4 text-center">
-              <p className="text-cream mb-0">No crates yet</p>
+              <p className="text-cream mb-0">no crates yet...</p>
             </div>
           )}
         </div>

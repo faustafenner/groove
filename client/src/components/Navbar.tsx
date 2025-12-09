@@ -38,13 +38,19 @@ export default function Navbar() {
         <FaBars size={24} />
       </button>
 
-      {/* Logo - Hidden on Home Page */}
-      {!isHomePage ? (
-        <Link href="/Home" className="text-decoration-none">
-          <Logo size="sm" />
-        </Link>
-      ) : (
-        <div /> /* Empty div to maintain spacing */
+      {/* Logo - Hidden on Home Page - Absolutely positioned to stay centered */}
+      {!isHomePage && (
+        <div
+          style={{
+            position: "absolute",
+            left: "50%",
+            transform: "translateX(-50%)",
+          }}
+        >
+          <Link href="/Home" className="text-decoration-none">
+            <Logo size="sm" />
+          </Link>
+        </div>
       )}
 
       {/* Sign In / Profile */}
@@ -132,7 +138,7 @@ export default function Navbar() {
             className="d-block text-white text-decoration-none py-2"
             onClick={() => setMenuOpen(false)}
           >
-            Search
+            Albums
           </Link>
           <Link
             href="/Crates"
@@ -141,6 +147,15 @@ export default function Navbar() {
           >
             Crates
           </Link>
+          {currentUser && (
+            <Link
+              href="/People"
+              className="d-block text-white text-decoration-none py-2"
+              onClick={() => setMenuOpen(false)}
+            >
+              People
+            </Link>
+          )}
           {currentUser && currentUser.role === "ADMIN" && (
             <Link
               href="/Admin/Users"

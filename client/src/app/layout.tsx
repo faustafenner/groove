@@ -3,6 +3,7 @@
 import Session from "./Account/Session";
 import { ReactNode } from "react";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import store from "./store";
@@ -13,11 +14,17 @@ export default function RootLayout({
 }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en">
-      <body className="bg-purple-dark">
+      <body
+        className="bg-purple-dark"
+        style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+      >
         <Provider store={store}>
           <Session>
             <Navbar />
-            <main className="container-fluid px-3 py-4">{children}</main>
+            <main className="container-fluid px-3 py-4" style={{ flex: 1 }}>
+              {children}
+            </main>
+            <Footer />
           </Session>
         </Provider>
       </body>
