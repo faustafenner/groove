@@ -444,7 +444,6 @@ export default function AlbumDetailPage() {
                             <small className="opacity-75">
                               {crate.albums.length} album
                               {crate.albums.length !== 1 ? "s" : ""}
-                              {!crate.isPublic && " • Private"}
                             </small>
                           </span>
                           {isLoading ? (
@@ -503,7 +502,7 @@ export default function AlbumDetailPage() {
 
                 <div className="d-flex gap-2">
                   <button
-                    className="btn btn-orange flex-grow-1"
+                    className="btn btn-cream flex-grow-1"
                     onClick={handleCreateCrate}
                     disabled={creatingCrate || !newCrateTitle.trim()}
                   >
