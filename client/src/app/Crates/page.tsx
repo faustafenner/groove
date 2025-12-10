@@ -83,7 +83,7 @@ export default function CratesDiscoveryPage() {
           </div>
           <p
             className="text-white text-center mt-0 mb-1"
-            style={{ fontSize: "1.5rem" }}
+            style={{ fontSize: "clamp(1rem, 3vw, 1.5rem)" }}
           >
             {crate.title}
           </p>
@@ -97,8 +97,8 @@ export default function CratesDiscoveryPage() {
           >
             <div
               style={{
-                width: 30,
-                height: 30,
+                width: "clamp(20px, 5vw, 30px)",
+                height: "clamp(20px, 5vw, 30px)",
                 borderRadius: "50%",
                 overflow: "hidden",
               }}
@@ -109,12 +109,15 @@ export default function CratesDiscoveryPage() {
                   alt={crate.user.username}
                   width={30}
                   height={30}
-                  style={{ objectFit: "cover" }}
+                  style={{ objectFit: "cover", width: "100%", height: "100%" }}
                 />
               ) : (
                 <div
                   className="w-100 h-100 d-flex align-items-center justify-content-center"
-                  style={{ fontSize: "10px", color: "#D76A05" }}
+                  style={{
+                    fontSize: "clamp(8px, 2vw, 10px)",
+                    color: "#D76A05",
+                  }}
                 >
                   {crate.user.username[0].toUpperCase()}
                 </div>
@@ -123,7 +126,10 @@ export default function CratesDiscoveryPage() {
             {isProUser && <FaCrown size={12} style={{ color: "#F5A623" }} />}
             <span
               className="text-cream"
-              style={{ fontSize: "0.75rem", opacity: 0.7 }}
+              style={{
+                fontSize: "clamp(0.625rem, 2vw, 0.75rem)",
+                opacity: 0.7,
+              }}
             >
               {crate.user.username}
             </span>
@@ -152,7 +158,7 @@ export default function CratesDiscoveryPage() {
         {recentCrates.length > 0 ? (
           <div className="row g-3">
             {recentCrates.slice(0, 8).map((crate) => (
-              <div key={crate._id} className="col-3">
+              <div key={crate._id} className="col-6 col-md-4 col-lg-3">
                 <CrateCard crate={crate} />
               </div>
             ))}
@@ -170,7 +176,7 @@ export default function CratesDiscoveryPage() {
         {discoverCrates.length > 0 ? (
           <div className="row g-3">
             {discoverCrates.map((crate) => (
-              <div key={crate._id} className="col-3">
+              <div key={crate._id} className="col-6 col-md-4 col-lg-3">
                 <CrateCard crate={crate} />
               </div>
             ))}

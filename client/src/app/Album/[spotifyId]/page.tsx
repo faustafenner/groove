@@ -229,15 +229,17 @@ export default function AlbumDetailPage() {
     <div>
       {/* Album Header */}
       <div className="row g-4 mb-4">
-        <div className="col-md-4">
+        <div className="col-12 col-lg-5 d-flex justify-content-center justify-content-lg-end align-items-start mb-6 mb-lg-0">
           <div
             style={{
               position: "relative",
               width: "100%",
-              maxWidth: "300px",
+              maxWidth: "400px",
               aspectRatio: "1/1",
-              borderRadius: "8px",
+              flexShrink: 0,
+              borderRadius: "5px",
               overflow: "hidden",
+              marginTop: "20px",
             }}
           >
             <Image
@@ -249,7 +251,7 @@ export default function AlbumDetailPage() {
           </div>
         </div>
 
-        <div className="col-md-8">
+        <div className="col-12 col-lg-7">
           <h1 className="text-white fw-bold">{album.name}</h1>
           <p className="text-cream fs-5">
             {album.artist} • {album.releaseDate?.split("-")[0]}
@@ -259,10 +261,7 @@ export default function AlbumDetailPage() {
           {album.tracks && (
             <div className="mt-3">
               <h6 className="text-orange">Tracks:</h6>
-              <div
-                className="text-cream small"
-                style={{ opacity: 0.8, maxHeight: "150px", overflowY: "auto" }}
-              >
+              <div className="text-cream small" style={{ opacity: 0.8 }}>
                 {album.tracks.map((track: any) => (
                   <div key={track.number}>
                     {track.number}. {track.name}

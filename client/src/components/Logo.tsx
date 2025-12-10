@@ -10,10 +10,11 @@ export default function Logo({ size = "md" }: LogoProps) {
   const sizes = {
     sm: { text: "40px", vinyl: 25 },
     md: { text: "100px", vinyl: 75 },
-    lg: { text: "175px", vinyl: 110 },
+    lg: { text: "clamp(80px, 15vw, 175px)", vinyl: "clamp(60, 10vw, 110)" },
   };
 
   const { text, vinyl } = sizes[size];
+  const vinylSize = typeof vinyl === "string" ? 110 : vinyl;
 
   return (
     <span
@@ -30,8 +31,8 @@ export default function Logo({ size = "md" }: LogoProps) {
           display: "inline-flex",
           alignItems: "center",
           justifyContent: "center",
-          width: vinyl,
-          height: vinyl,
+          width: typeof vinyl === "string" ? "0.63em" : vinyl,
+          height: typeof vinyl === "string" ? "0.63em" : vinyl,
           position: "relative",
         }}
       >
@@ -39,8 +40,8 @@ export default function Logo({ size = "md" }: LogoProps) {
           className="spin-slow"
           style={{
             display: "block",
-            width: vinyl,
-            height: vinyl,
+            width: "100%",
+            height: "100%",
             position: "absolute",
             top: "50%",
             left: "50%",
@@ -51,11 +52,13 @@ export default function Logo({ size = "md" }: LogoProps) {
           <Image
             src="/vinyl.png"
             alt="o"
-            width={vinyl}
-            height={vinyl}
+            width={vinylSize}
+            height={vinylSize}
             style={{
               objectFit: "contain",
               display: "block",
+              width: "100%",
+              height: "100%",
             }}
           />
         </span>

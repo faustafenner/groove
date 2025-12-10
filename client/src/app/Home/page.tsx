@@ -112,8 +112,10 @@ export default function HomePage() {
   return (
     <div className="text-center">
       {/* Hero Logo */}
-      <div className="py-5">
-        <Logo size="lg" />
+      <div className="py-5 px-3">
+        <div style={{ maxWidth: "100%", overflow: "hidden" }}>
+          <Logo size="lg" />
+        </div>
         <h2 className="text-cream mt-3" style={{ opacity: 0.9 }}>
           F*ck the Recording Academy, You&apos;re Rating Albums Now.
         </h2>
