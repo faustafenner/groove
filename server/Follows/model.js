@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
 import schema from "./schema.js";
 
-const model = mongoose.model("FollowModel", schema);
+const model = mongoose.model("FollowModel", schema); //create and export the Follow model
 export default model;

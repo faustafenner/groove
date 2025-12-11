@@ -1,14 +1,14 @@
 import axios from "axios";
 
 export default function SpotifyRoutes(app) {
-  let accessToken = null;
-  let tokenExpiry = null;
+  let accessToken = null; //cached access token
+  let tokenExpiry = null; //token expiry time
 
+  //function to get Spotify access token
   const getAccessToken = async () => {
     if (accessToken && tokenExpiry && Date.now() < tokenExpiry) {
-      return accessToken;
+      return accessToken; //return cached token if still valid
     }
-
     const clientId = process.env.SPOTIFY_CLIENT_ID;
     const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 
@@ -31,9 +31,11 @@ export default function SpotifyRoutes(app) {
     return accessToken;
   };
 
+  //handler for searching albums
   const searchAlbums = async (req, res) => {
     const { q, limit } = req.query;
 
+    //make sure the user searched for something
     if (!q) {
       res.status(400).json({ message: "Search query required" });
       return;
@@ -45,12 +47,13 @@ export default function SpotifyRoutes(app) {
       const response = await axios.get("https://api.spotify.com/v1/search", {
         headers: { Authorization: `Bearer ${token}` },
         params: {
-          q,
-          type: "album",
-          limit: limit || 20,
+          q, //search query
+          type: "album", //search for albums
+          limit: limit || 20, //return 20 results
         },
       });
 
+      //map Spotify API response to desired format
       const albums = response.data.albums.items.map((album) => ({
         spotifyId: album.id,
         name: album.name,
@@ -69,6 +72,7 @@ console.error("Spotify search error:", error.response?.data || error.message);
     }
   };
 
+  //handler for getting album details by Spotify ID
   const getAlbumById = async (req, res) => {
     const { spotifyId } = req.params;
 
@@ -106,6 +110,7 @@ console.error("Spotify search error:", error.response?.data || error.message);
     }
   };
 
+  //define routes and map to handlers
   app.get("/api/spotify/search", searchAlbums);
   app.get("/api/spotify/albums/:spotifyId", getAlbumById);
 }

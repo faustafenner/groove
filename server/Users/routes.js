@@ -1,20 +1,23 @@
-import UsersDao from "./dao.js";
+import UsersDao from "./dao.js"; //import the Data Access Object for Users
 
 export default function UserRoutes(app) {
-  const dao = UsersDao();
+  const dao = UsersDao(); //instantiate dao
 
+  //handler for user sign-in
   const signin = async (req, res) => {
-    const { email, password } = req.body;
-    const user = await dao.findUserByCredentials(email, password);
+    const { email, password } = req.body; //extract email and password from req body
+    const user = await dao.findUserByCredentials(email, password); //call dao method
+
     if (user) {
-      req.session["currentUser"] = user;
-      const { password: _, ...userWithoutPassword } = user.toObject();
-      res.json(userWithoutPassword);
+      req.session["currentUser"] = user; //store user in session
+      const { password: _, ...userWithoutPassword } = user.toObject(); //dont send back password
+      res.json(userWithoutPassword); //response 
     } else {
-      res.status(401).json({ message: "Invalid email or password" });
+      res.status(401).json({ message: "Invalid email or password" }); //error message
     }
   };
 
+  //handler for user sign-up
   const signup = async (req, res) => {
     const { username, email, password } = req.body;
 
