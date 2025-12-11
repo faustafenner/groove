@@ -10,36 +10,41 @@ import Image from "next/image";
 import { FaEdit, FaSave, FaTimes, FaTrash } from "react-icons/fa";
 
 export default function ManageUsersPage() {
+  //get current user and router
   const { currentUser } = useSelector(
     (state: RootState) => state.accountReducer
   );
-  const router = useRouter();
-  const [users, setUsers] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [editingUserId, setEditingUserId] = useState<string | null>(null);
-  const [error, setError] = useState<string>("");
+  const router = useRouter(); //Next.js router
+  const [users, setUsers] = useState<any[]>([]); //list of users
+  const [loading, setLoading] = useState(true); //loading state
+  const [editingUserId, setEditingUserId] = useState<string | null>(null); //currently editing user ID
+  const [error, setError] = useState<string>(""); //error message state
   const [editForm, setEditForm] = useState({
+    //form data for editing user
     username: "",
     email: "",
     role: "",
   });
 
+  //check admin access after page load
   useEffect(() => {
     if (!currentUser) {
       router.push("/Account/Signin");
       return;
     }
+    //only allow admins to access this page
     if (currentUser.role !== "ADMIN") {
       router.push("/Home");
       return;
     }
-    fetchUsers();
-  }, [currentUser, router]);
+    fetchUsers(); //fetch list of users
+  }, [currentUser, router]); //dependency array for useEffect
 
+  //fetch all users from server
   const fetchUsers = async () => {
     try {
       setError("");
-      const data = await client.findAllUsers();
+      const data = await client.findAllUsers(); //fetch users from client
       setUsers(data);
     } catch (error: any) {
       console.error("Error fetching users:", error);
@@ -49,6 +54,7 @@ export default function ManageUsersPage() {
     }
   };
 
+  //handle edit button click
   const handleEdit = (user: any) => {
     setEditingUserId(user._id);
     setEditForm({
@@ -58,11 +64,13 @@ export default function ManageUsersPage() {
     });
   };
 
+  //handle cancel edit
   const handleCancelEdit = () => {
     setEditingUserId(null);
     setEditForm({ username: "", email: "", role: "" });
   };
 
+  //handle save edited user
   const handleSaveEdit = async (userId: string) => {
     try {
       await client.updateUser({
@@ -77,6 +85,7 @@ export default function ManageUsersPage() {
     }
   };
 
+  //handle delete user
   const handleDelete = async (userId: string, username: string) => {
     if (
       !window.confirm(
@@ -86,14 +95,15 @@ export default function ManageUsersPage() {
       return;
 
     try {
-      await client.deleteUser(userId);
-      fetchUsers();
+      await client.deleteUser(userId); //delete user by ID
+      fetchUsers(); //refresh user list
     } catch (error: any) {
       console.error("Error deleting user:", error);
       alert(error.response?.data?.message || "Failed to delete user");
     }
   };
 
+  //show loading spinner while fetching data
   if (loading) {
     return (
       <div className="text-center py-5">
@@ -104,6 +114,7 @@ export default function ManageUsersPage() {
     );
   }
 
+  //render user management table
   return (
     <div className="container py-4">
       <h2 className="text-white mb-4">Manage Users</h2>

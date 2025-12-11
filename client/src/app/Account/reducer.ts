@@ -1,5 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit"; //Redux Toolkit for state management
 
+//define User and AccountState interfaces
 interface User {
   _id: string;
   username: string;
@@ -12,17 +13,20 @@ interface User {
   createdAt: string;
 }
 
+//define the account state structure
 interface AccountState {
   currentUser: User | null;
 }
 
+//initial state for the account slice, nobody is logged in initially
 const initialState: AccountState = {
   currentUser: null,
 };
 
+//create the account slice with reducers
 const accountSlice = createSlice({
   name: "account",
-  initialState,
+  initialState, 
   reducers: {
     setCurrentUser: (state, action) => {
       state.currentUser = action.payload;
@@ -30,5 +34,6 @@ const accountSlice = createSlice({
   },
 });
 
+//export actions and reducer
 export const { setCurrentUser } = accountSlice.actions;
 export default accountSlice.reducer;

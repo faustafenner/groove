@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import * as client from "./client";
-import { useEffect, useState } from "react";
-import { setCurrentUser } from "./reducer";
-import { useDispatch } from "react-redux";
+import * as client from "./client"; //import client-side account API functions
+import { useEffect, useState } from "react"; //import React hooks
+import { setCurrentUser } from "./reducer"; //import Redux action to set current user
+import { useDispatch } from "react-redux"; //import Redux dispatch hook
 
 export default function Session({ children }: { children: React.ReactNode }) {
   const [pending, setPending] = useState(true);
   const dispatch = useDispatch();
 
+  //checks for an active user
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -26,6 +27,7 @@ export default function Session({ children }: { children: React.ReactNode }) {
     fetchProfile();
   }, [dispatch]);
 
+  //show loading spinner while checking for active session
   if (pending) {
     return (
       <div
@@ -44,5 +46,6 @@ export default function Session({ children }: { children: React.ReactNode }) {
     );
   }
 
+  //render children components once session check is complete
   return <>{children}</>;
 }

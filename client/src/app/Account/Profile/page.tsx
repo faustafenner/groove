@@ -7,12 +7,9 @@ import { useRouter } from "next/navigation";
 import { RootState } from "../../store";
 import Image from "next/image";
 import Link from "next/link";
-import axios from "axios";
 import { FaCrown, FaPencilAlt } from "react-icons/fa";
 import { setCurrentUser } from "../reducer";
-
-const HTTP_SERVER = process.env.NEXT_PUBLIC_HTTP_SERVER;
-const axiosWithCredentials = axios.create({ withCredentials: true });
+import * as client from "../client";
 
 // Available avatar options
 const AVATAR_OPTIONS = [
@@ -27,70 +24,61 @@ const AVATAR_OPTIONS = [
   "/avatars/beygrammy.png",
 ];
 
+//edit Profile Page Component
 export default function EditProfilePage() {
-  const dispatch = useDispatch();
-  const router = useRouter();
+  const dispatch = useDispatch(); //get Redux dispatch function
+  const router = useRouter(); //get Next.js router
+
+  //get current user from Redux store
   const { currentUser } = useSelector(
     (state: RootState) => state.accountReducer
   );
 
-  const [username, setUsername] = useState(currentUser?.username || "");
-  const [bio, setBio] = useState(currentUser?.bio || "");
-  const [email, setEmail] = useState(currentUser?.email || "");
-  const [avatar, setAvatar] = useState(currentUser?.avatar || "");
-  const [showAvatarSelector, setShowAvatarSelector] = useState(false);
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-  const [editingField, setEditingField] = useState<string | null>(null);
-  const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState({ type: "", text: "" });
+  const [username, setUsername] = useState(currentUser?.username || ""); //state for username
+  const [bio, setBio] = useState(currentUser?.bio || ""); //state for bio
+  const [email, setEmail] = useState(currentUser?.email || ""); //state for email
+  const [avatar, setAvatar] = useState(currentUser?.avatar || ""); //state for avatar URL
+  const [showAvatarSelector, setShowAvatarSelector] = useState(false); //state to toggle avatar selector
+  const [editingField, setEditingField] = useState<string | null>(null); //state for currently editing field, can be 'username', 'bio', or 'email', only one at a time
+  const [saving, setSaving] = useState(false); //state for save operation
+  const [message, setMessage] = useState({ type: "", text: "" }); //state for success/error messages
 
+  //determine if current user is PRO or ADMIN
   const isProUser =
     currentUser && (currentUser.role === "PRO" || currentUser.role === "ADMIN");
 
+  //handle avatar selection from avatar selector
   const handleAvatarSelect = (avatarPath: string) => {
     setAvatar(avatarPath);
-    setAvatarPreview(null);
-    setAvatarFile(null);
     setShowAvatarSelector(false);
   };
 
+  //handle saving all profile changes
   const handleSaveAll = async () => {
-    if (!currentUser) return;
+    if (!currentUser) return; //safety check
 
-    setSaving(true);
-    setMessage({ type: "", text: "" });
+    setSaving(true); //indicate save in progress
+    setMessage({ type: "", text: "" }); //clear previous messages
 
     try {
-      // For now, avatar uploads aren't supported - you can only use avatar URLs
-      if (avatarFile) {
-        setMessage({
-          type: "error",
-          text: "Avatar file upload not yet supported. Please use an image URL instead.",
-        });
-        setSaving(false);
-        return;
-      }
-
       // Save profile data
       const updateData: any = {
+        _id: currentUser._id,
         username,
         bio,
         email,
-        avatar, // Save avatar URL if provided
+        avatar,
       };
 
-      const res = await axiosWithCredentials.put(
-        `${HTTP_SERVER}/api/users/${currentUser._id}`,
-        updateData
-      );
+      //update user profile using client function
+      const updatedUser = await client.updateUser(updateData);
 
-      dispatch(setCurrentUser(res.data));
-      setMessage({ type: "success", text: "Profile updated successfully!" });
+      dispatch(setCurrentUser(updatedUser)); //update Redux store with new user data
+      setMessage({ type: "success", text: "Profile updated successfully!" }); //show success message
 
       // Navigate to public profile after a short delay
       setTimeout(() => {
-        router.push(`/Profile/${currentUser._id}`);
+        router.push(`/Profile/${updatedUser._id}`);
       }, 1000);
     } catch (err: any) {
       setMessage({
@@ -103,7 +91,7 @@ export default function EditProfilePage() {
 
   const handleLogout = async () => {
     try {
-      await axiosWithCredentials.post(`${HTTP_SERVER}/api/users/signout`);
+      await client.signout();
       dispatch(setCurrentUser(null));
       router.push("/");
     } catch (err) {
@@ -118,8 +106,6 @@ export default function EditProfilePage() {
       </div>
     );
   }
-
-  const displayAvatar = avatarPreview || avatar;
 
   return (
     <div
@@ -149,9 +135,9 @@ export default function EditProfilePage() {
               border: "4px solid white",
             }}
           >
-            {displayAvatar ? (
+            {avatar ? (
               <Image
-                src={displayAvatar}
+                src={avatar}
                 alt={username}
                 width={250}
                 height={250}

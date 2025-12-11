@@ -16,44 +16,48 @@ const HTTP_SERVER = process.env.NEXT_PUBLIC_HTTP_SERVER;
 const axiosWithCredentials = axios.create({ withCredentials: true });
 
 export default function AlbumDetailPage() {
-  const params = useParams();
-  const spotifyId = params.spotifyId as string;
+  const params = useParams(); //get spotifyId from URL
+  const spotifyId = params.spotifyId as string; //cast to string
+
+  //get current user from Redux store
   const { currentUser } = useSelector(
     (state: RootState) => state.accountReducer
   );
 
-  const [album, setAlbum] = useState<any>(null);
-  const [reviews, setReviews] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [album, setAlbum] = useState<any>(null); //album details state
+  const [reviews, setReviews] = useState<any[]>([]); //album reviews state
+  const [loading, setLoading] = useState(true); //loading state
 
-  // Review form state
+  //review form state
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewContent, setReviewContent] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  // Crate modal state
+  //crate modal state
   const [showCrateModal, setShowCrateModal] = useState(false);
   const [userCrates, setUserCrates] = useState<any[]>([]);
   const [loadingCrates, setLoadingCrates] = useState(false);
   const [addingToCrate, setAddingToCrate] = useState<string | null>(null);
   const [addedToCrates, setAddedToCrates] = useState<string[]>([]);
 
-  // New crate form state
+  //new crate form state
   const [showNewCrateForm, setShowNewCrateForm] = useState(false);
   const [newCrateTitle, setNewCrateTitle] = useState("");
   const [newCrateDescription, setNewCrateDescription] = useState("");
   const [creatingCrate, setCreatingCrate] = useState(false);
 
   useEffect(() => {
-    let isMounted = true;
+    let isMounted = true; //to prevent state updates if user navigates away
 
+    //fetch album details and reviews
     const fetchAlbumData = async () => {
       try {
         const [albumRes, reviewsRes] = await Promise.all([
           axios.get(`${HTTP_SERVER}/api/spotify/albums/${spotifyId}`),
           axios.get(`${HTTP_SERVER}/api/reviews/album/${spotifyId}`),
         ]);
+        //update state only if user is still on the page
         if (isMounted) {
           setAlbum(albumRes.data);
           setReviews(reviewsRes.data);
@@ -66,14 +70,16 @@ export default function AlbumDetailPage() {
         }
       }
     };
-
+    //fetch album data on component mount or when spotifyId changes
     fetchAlbumData();
 
+    //cleanup function to set isMounted to false
     return () => {
       isMounted = false;
     };
   }, [spotifyId]);
 
+  //function to refresh reviews after posting or deleting
   const refreshReviews = async () => {
     try {
       const response = await axios.get(
@@ -85,6 +91,7 @@ export default function AlbumDetailPage() {
     }
   };
 
+  //handle review form submission
   const handleSubmitReview = async () => {
     if (!currentUser || !reviewRating || !reviewContent.trim()) return;
 
@@ -135,6 +142,7 @@ export default function AlbumDetailPage() {
     setLoadingCrates(false);
   };
 
+  //handle adding album to crate
   const handleAddToCrate = async (crateId: string) => {
     setAddingToCrate(crateId);
     try {
@@ -154,6 +162,7 @@ export default function AlbumDetailPage() {
     setAddingToCrate(null);
   };
 
+  //handle removing album from crate
   const handleRemoveFromCrate = async (crateId: string) => {
     setAddingToCrate(crateId);
     try {
@@ -167,6 +176,7 @@ export default function AlbumDetailPage() {
     setAddingToCrate(null);
   };
 
+  //handle creating a new crate and adding album to it
   const handleCreateCrate = async () => {
     if (!newCrateTitle.trim()) return;
 
